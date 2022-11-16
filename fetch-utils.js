@@ -9,7 +9,19 @@ export function getUser() {
     return client.auth.session() && client.auth.session().user;
 }
 
-export async function signupUser(email, password) {
+export async function checkAuth() {
+    const user = await getUser();
+
+    if (!user) location.replace('../');
+}
+
+export async function redirectIfLoggedIn() {
+    if (await getUser()) {
+        location.replace('./other-page');
+    }
+}
+
+export async function signUpUser(email, password) {
     const response = await client.auth.signUp({ email, password });
 
     return response.user;
@@ -21,8 +33,8 @@ export async function signInUser(email, password) {
     return response.user;
 }
 
-export async function checkAuth() {}
+export async function logout() {
+    await client.auth.signOut();
 
-export async function redirectIfLoggedIn() {}
-
-export async function logout() {}
+    return (window.location.href = '../');
+}
